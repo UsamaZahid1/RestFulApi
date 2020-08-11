@@ -6,25 +6,53 @@ import android.os.Parcelable;
 
 public class CityItem implements Parcelable {
 
-    private Integer id;
-    private String main;
+    private int id;
+    private String cityname;
+    private int rank;
+    private double population;
+    private String province;
     private String description;
-    private String icon;
+    private String image;
 
-    public Integer getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getMain() {
-        return main;
+    public String getCityname() {
+        return cityname;
     }
 
-    public void setMain(String main) {
-        this.main = main;
+    public void setCityname(String cityname) {
+        this.cityname = cityname;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public double getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(double population) {
+        this.population = population;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getDescription() {
@@ -35,12 +63,12 @@ public class CityItem implements Parcelable {
         this.description = description;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getImage() {
+        return image;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
@@ -51,19 +79,25 @@ public class CityItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
-        dest.writeString(this.main);
+        dest.writeString(this.cityname);
+        dest.writeValue(this.rank);
+        dest.writeValue(this.population);
+        dest.writeString(this.province);
         dest.writeString(this.description);
-        dest.writeString(this.icon);
+        dest.writeString(this.image);
     }
 
     public CityItem() {
     }
 
     protected CityItem(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.main = in.readString();
+        this.id = (int) in.readValue(int.class.getClassLoader());
+        this.cityname = in.readString();
+        this.rank = (int) in.readValue(int.class.getClassLoader());
+        this.population = (int) in.readValue(int.class.getClassLoader());
+        this.province = in.readString();
         this.description = in.readString();
-        this.icon = in.readString();
+        this.image = in.readString();
     }
 
     public static final Parcelable.Creator<CityItem> CREATOR = new Parcelable.Creator<CityItem>() {

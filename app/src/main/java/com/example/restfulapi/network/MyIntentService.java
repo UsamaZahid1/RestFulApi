@@ -19,6 +19,7 @@ public class MyIntentService extends IntentService {
 
     public static final String SERVICE_PAYLOAD="SERVICE_PAYLOAD";
     public static final String SERVICE_MESSAGE="SERVICE_MESSAGE";
+    public static final String SERVICE_EXCEPTION="SERVICE_EXCEPTION";
 
     public MyIntentService() {
         super("MyIntentService");
@@ -30,21 +31,28 @@ public class MyIntentService extends IntentService {
         Uri uri=intent.getData();
         String data;
         try {
-            data= HttpHelper.downloadURL(uri.toString());
-        } catch (IOException e) {
+            data= HttpHelper.downloadURL(uri.toString(),"admin","lolx");
+        } catch (Exception e) {
             e.printStackTrace();
-            data=e.getMessage();
+            sendMessageToUI(e);
+            return;
         }
-//        Gson gson=new Gson();
-//        CityItem[] cityItems=gson.fromJson(data,CityItem[].class);
+        Gson gson=new Gson();
+        CityItem[] cityItems=gson.fromJson(data,CityItem[].class);
 
-        sendMessageToUI(data);
-
-
+        sendMessageToUI(cityItems);
 
     }
 
-    private void sendMessageToUI(String data) {
+    private void sendMessageToUI(Exception e) {
+        Intent intent=new Intent(SERVICE_MESSAGE);
+        //SERVICE_PAYLOAD is a intent extra key
+        intent.putExtra(SERVICE_EXCEPTION,e.getMessage());
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void sendMessageToUI(CityItem[] data) {
 
         Intent intent=new Intent(SERVICE_MESSAGE);
         //SERVICE_PAYLOAD is a intent extra key

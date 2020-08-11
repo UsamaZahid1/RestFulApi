@@ -1,5 +1,7 @@
 package com.example.restfulapi.utils;
 
+import android.util.Base64;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,11 +11,22 @@ import java.net.URL;
 
 public class HttpHelper {
 
-    public static String downloadURL(String address) throws IOException {
+    public static String downloadURL(String address,String userName,String password) throws Exception {
+
+        //Authorization: Basic {base64_encode(username:password)}
+        byte[] loginBytes=(userName+":"+password).getBytes();
+
+        StringBuilder stringBuilder=new StringBuilder()
+                .append("Basic ")
+                .append(Base64.encodeToString(loginBytes,Base64.DEFAULT));
+
         InputStream inputStream = null;
         try {
             URL url = new URL(address);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            //
+            connection.setRequestProperty("Authorization",stringBuilder.toString());
             //setting some properties on connection
             //15 sec tuk agr server se data na read kr saken to readtimeout ka error ajae ga
             connection.setReadTimeout(15000);
@@ -37,16 +50,14 @@ public class HttpHelper {
             return readStream(inputStream);
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+        }  finally {
 
             if (inputStream != null) {
                 inputStream.close();
             }
 
         }
-        return null;
+
     }
 
     private static String readStream(InputStream stream) throws IOException {
